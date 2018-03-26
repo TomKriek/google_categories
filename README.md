@@ -1,7 +1,7 @@
 # google_categories
 Sorting google categories with parent_id
 
-Pull repo and run command php sort_categories.php [-p|-c] [-v]
+Pull repo and run command ```php sort_categories.php [-p|-c] [-v]```
 
 Will generate a JSON file with all categories sorted.
 
