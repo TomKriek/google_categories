@@ -17,9 +17,7 @@ foreach ($isos as $iso) {
     $locales[$iso]['short'] = $iso;
 }
 
-$lines = [];
 $categories = [];
-$categoryList = [];
 $notAdded = 0;
 $ignored = 0;
 
@@ -86,6 +84,7 @@ foreach ($locales as $locale => $localeValues) {
                     // Small check to see if it was actually added, only ever shown up when using chinese locale
                     if(!is_array($categories[$localeValues['short']][$categoryName])){
                         echo "\033[31mCATEGORY WAS NOT INSERTED\033[0m\n";
+                        $notAdded++;
                     }
                 }
             } else {
@@ -114,6 +113,7 @@ foreach ($locales as $locale => $localeValues) {
                     // Small check to see if it was actually added, only ever shown up when using chinese locale
                     if(!is_array($categories[$localeValues['short']][$categoryName])){
                         echo "\033[31mCATEGORY WAS NOT INSERTED\033[0m\n";
+                        $notAdded++;
                     }
                 }
             }
