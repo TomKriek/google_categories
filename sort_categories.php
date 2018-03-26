@@ -12,6 +12,24 @@ function progress($done, $total)
     fwrite(STDERR, $write);
 }
 
+function console($output, $alternative = null){
+
+    global $br;
+
+    if (php_sapi_name() != 'cli') {
+        if(!is_null($alternative)){
+            echo $alternative . $br;
+        }else{
+            echo $br;
+        }
+    }else{
+        echo $output;
+    }
+}
+
+$br = (php_sapi_name() == 'cli' ? "\n" : '<br/>');
+$t = (php_sapi_name() == 'cli' ? "\t" : "&#09;");
+
 $isos = require("iso.php");
 foreach ($isos as $iso) {
     $locales[$iso]['short'] = $iso;
@@ -34,7 +52,7 @@ foreach ($locales as $locale => $localeValues) {
     // Get our lines
     $lines = explode("\n", $file);
 
-    echo "Processing file " . $fileName . "\t" . count($lines) . "\n";
+    echo "Processing file " . $fileName . "\t" . count($lines) . "{$br}";
 
     // Loop through lines of the file
     foreach ($lines as $line) {
@@ -71,8 +89,8 @@ foreach ($locales as $locale => $localeValues) {
                         'locale' => $localeValues['short'],
                         'duplicate' => true,
                     ];
-                    echo 'Key exists \'' . $categoryName . '\' in \''. $localeValues['short'] . '\' array, id: ' . $id . "\n";
-                    echo "Inserted as duplicate with key: ". $id."<>".$categoryName . "\n";
+                    echo 'Key exists \'' . $categoryName . '\' in \''. $localeValues['short'] . '\' array, id: ' . $id . "{$br}";
+                    echo "Inserted as duplicate with key: ". $id."<>".$categoryName . "{$br}";
                 } else {
                     // Insert our category
                     $categories[$localeValues['short']][$categoryName] = [
@@ -83,7 +101,7 @@ foreach ($locales as $locale => $localeValues) {
 
                     // Small check to see if it was actually added, only ever shown up when using chinese locale
                     if(!is_array($categories[$localeValues['short']][$categoryName])){
-                        echo "\033[31mCATEGORY WAS NOT INSERTED\033[0m\n";
+                        console("\033[31mCATEGORY WAS NOT INSERTED\033[0m{$br}", "CATEGORY WAS NOT INSERTED");
                         $notAdded++;
                     }
                 }
@@ -102,8 +120,8 @@ foreach ($locales as $locale => $localeValues) {
                         'locale' => $localeValues['short'],
                         'duplicate' => true,
                     ];
-                    echo 'Key exists \'' . $categoryName . '\' in \''. $localeValues['short'] . '\' array, id: ' . $id . "\n";
-                    echo "Inserted as duplicate with key: ". $id."<>".$categoryName . "\n";
+                    echo 'Key exists \'' . $categoryName . '\' in \''. $localeValues['short'] . '\' array, id: ' . $id . "{$br}";
+                    echo "Inserted as duplicate with key: ". $id."<>".$categoryName . "{$br}";
                 } else {
                     $categories[$localeValues['short']][$categoryName] = [
                         'id' => $id,
@@ -112,18 +130,17 @@ foreach ($locales as $locale => $localeValues) {
 
                     // Small check to see if it was actually added, only ever shown up when using chinese locale
                     if(!is_array($categories[$localeValues['short']][$categoryName])){
-                        echo "\033[31mCATEGORY WAS NOT INSERTED\033[0m\n";
+                        console("\033[31mCATEGORY WAS NOT INSERTED\033[0m{$br}", "CATEGORY WAS NOT INSERTED");
                         $notAdded++;
                     }
                 }
             }
         } else {
-            echo "Ignoring line:\t" . ($line == '' ? '(empty)' : $line) . "\n";
+            echo "Ignoring line:\t" . ($line == '' ? '(empty)' : $line) . "{$br}";
             $ignored++;
         }
     }
-
-    echo "\033[32mDone.\033[0m\n";
+    console("\033[32mDone.\033[0m{$br}", "Done.");
 }
 
 /**
@@ -154,12 +171,12 @@ foreach ($locales as $locale => $localeValues) {
     }
 }
 
-echo "\n";
-echo "Total lines\t" . $total . "\n";
-echo "Lines ignored \t" . $ignored . "\n";
-echo "Not processed\t" . $notAdded . "\n";
+echo "{$br}";
+echo "Total lines\t" . $total . "{$br}";
+echo "Lines ignored \t" . $ignored . "{$br}";
+echo "Not processed\t" . $notAdded . "{$br}";
 
-echo "\nReorganizing categories...\n";
+echo "\nReorganizing categories...{$br}";
 
 // Our final array which will have category_ids as the index and keys id, parent_id and keys for each locale
 $allCategories = [];
@@ -201,17 +218,18 @@ foreach ($categories as $catLocale => $cats) {
     }
 }
 
-echo "\n";
+echo "{$br}";
 
 if(in_array('-v', $argv)){
     $discrepancies = 0;
-    echo "\n";
-    echo "Checking all locales for each category...\n\n";
+    echo "{$br}";
+    echo "Checking all locales for each category...{$br}{$br}";
 
     foreach($allCategories as $category_id => $category){
         if(count($category) != count($locales) + 1 ){
 
-            echo "\033[31m$category_id does not have all locales\033[0m\n";
+            console("\033[31m$category_id does not have all locales\033[0m{$br}",
+                "$category_id does not have all locales.");
 
             $missing = false;
             foreach($locales as $locale => $localeValues){
@@ -223,17 +241,18 @@ if(in_array('-v', $argv)){
             }
 
             if($missing){
-                echo " missing from category translations\n\n";
+                echo " missing from category translations{$br}{$br}";
                 $discrepancies++;
             }
 
             var_dump($category);
-            echo "\n";
+            echo "{$br}";
         }
     }
 
     if($discrepancies === 0){
-        echo "\033[32mNo discrepancies found in the amount of locales for all categories!\033[0m\n\n";
+        console("\033[32mNo discrepancies found in the amount of locales for all categories!\033[0m{$br}{$br}",
+            "No discrepancies found in the amount of locales for all categories!");
     }
 }
 
@@ -254,3 +273,8 @@ if(in_array('-p', $argv) && !in_array('-c', $argv)){
 
 unlink("categories.json");
 file_put_contents("categories.json", json_encode($allCategories, JSON_PRETTY_PRINT));
+
+if (php_sapi_name() != 'cli') {
+    echo '<br/>';
+    echo '<a href="/categories.json">Categories.json</a>';
+}
