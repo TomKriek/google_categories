@@ -107,7 +107,7 @@ class Sorter
 
                     if (array_key_exists('duplicate', $values)) {
                         // Key is duplicate split
-                        [$id, $categoryName] = explode('<>', $categoryName);
+                        list( , $categoryName) = explode('<>', $categoryName);
                     }
                     // Default ID for the parent_id if a parent was found it will update it
                     $parent_id = 0;
@@ -170,10 +170,10 @@ class Sorter
                         $fullParentName = $lineParts[\count($lineParts) - 2];
                         if (\count($lineParts) === 2) {
                             // Parent is dirty with the ID in it
-                            [$id, $parentName] = explode(' - ', $lineParts[0]);
+                            list($id, $parentName) = explode(' - ', $lineParts[0]);
                         } else {
                             // Just get ID
-                            [$id] = explode(' - ', $lineParts[0]);
+                            list($id) = explode(' - ', $lineParts[0]);
                             $parentName = $fullParentName;
                         }
 
@@ -208,7 +208,7 @@ class Sorter
                         }
                     } else {
                         // Top level category
-                        [$id, $categoryName] = explode(' - ', $lineParts[0]);
+                        list($id, $categoryName) = explode(' - ', $lineParts[0]);
 
                         // Typecast
                         $id = (int)$id;
@@ -248,7 +248,7 @@ class Sorter
         return $this;
     }
 
-    public function debug($var): void
+    public function debug($var)
     {
         if ($this->debug === true) {
             if (PHP_SAPI === 'cli') {
@@ -275,7 +275,7 @@ class Sorter
      * @param $done
      * @param $total
      */
-    private function progress($done, $total): void
+    private function progress($done, $total)
     {
         if (PHP_SAPI === 'cli') {
             $perc = floor(($done / $total) * 100);
