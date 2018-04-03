@@ -1,0 +1,19 @@
+{
+    "name": "tkriek/google_categories",
+    "description": "Sort categories for different locales based on category_id and build relations with parent_id",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TomKriek",
+            "email": "tomkriek@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4" : {
+            "TomKriek\\GoogleCategories\\" : "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

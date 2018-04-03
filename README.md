@@ -16,3 +16,14 @@ Will generate a JSON file with all categories sorted.
 WIP for japanese and chinese locale because of their language constructs
 
 ```iso.php``` file contains enabled locales to retrieve a google taxonomy file from and parse it.
+
+
+
+
+Example of how to use the sorter OOP style
+```
+<?php
+   
+require __DIR__ . '/src/Sorter.php';
+   
+$json = (new \TomKriek\GoogleCategories\Sorter([], true))->sort()->sortByParent()->outputJSON(true);```
