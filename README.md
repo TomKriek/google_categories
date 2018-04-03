@@ -26,4 +26,5 @@ Example of how to use the sorter OOP style
    
 require __DIR__ . '/src/Sorter.php';
    
-$json = (new \TomKriek\GoogleCategories\Sorter([], true))->sort()->sortByParent()->outputJSON(true);```
+$json = (new \TomKriek\GoogleCategories\Sorter([], true))->sort()->sortByParent()->outputJSON(true);
+```
