@@ -107,7 +107,7 @@ class Sorter
 
                     if (array_key_exists('duplicate', $values)) {
                         // Key is duplicate split
-                        list( , $categoryName) = explode('<>', $categoryName);
+                        list(, $categoryName) = explode('<>', $categoryName);
                     }
                     // Default ID for the parent_id if a parent was found it will update it
                     $parent_id = 0;
@@ -292,7 +292,7 @@ class Sorter
      */
     public function sortByParent(): Sorter
     {
-        usort($this->categories, function ($item1, $item2) {
+        uasort($this->categories, function ($item1, $item2) {
             return $item1['parent_id'] <=> $item2['parent_id'];
         });
 
@@ -322,5 +322,13 @@ class Sorter
         }
 
         return json_encode($this->categories);
+    }
+
+    /**
+     * @return array
+     */
+    public function outputArray()
+    {
+        return $this->categories;
     }
 }
